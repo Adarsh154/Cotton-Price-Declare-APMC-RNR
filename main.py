@@ -1,3 +1,4 @@
+import selenium.webdriver.common.devtools.v104.runtime
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -101,6 +102,14 @@ def down():
               'params': {'behavior': 'allow', 'downloadPath': download_path}}
     driver.execute("send_command", params)
     driver.find_element(By.XPATH, '//button[text()="Print"]').click()
+    try:
+        time.sleep(10)
+        obj = driver.switch_to.alert
+        if obj.text == "File not found.":
+            driver.close()
+            return False
+    except:
+        pass
     driver.save_screenshot("ss3.png")
     time.sleep(50)
     after = os.listdir(download_path)
@@ -113,13 +122,15 @@ def down():
         driver.find_element(By.LINK_TEXT, "Log Out").click()
     except:
         pass
+    driver.close()
     if file_name:
-        return send_doc(file_name, download_path), driver.close()
-    return False, driver.close()
+        return send_doc(file_name, download_path)
+    return False
 
 
 flag = False
 while 1:
+    time.sleep(350)
     day = (datetime.now(tz=gettz('Asia/Kolkata'))).today().weekday()
     #day = 0
     if day != 0 and day != 3:
@@ -132,8 +143,8 @@ while 1:
             continue
     try:
         if not flag:
-            flag, _ = down()
+            flag = down()
 
     except Exception as e:
-        print(e)
+        print(e, end="\n\n")
         continue
