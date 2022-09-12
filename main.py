@@ -1,15 +1,17 @@
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
+import os
 import time
 from datetime import datetime
-from dateutil.tz import gettz
-from selenium.webdriver.common.action_chains import ActionChains
+
 import requests
-import os
-from selenium.webdriver.support.ui import Select
+from dateutil.tz import gettz
+from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
+from selenium.webdriver.support.ui import WebDriverWait
+
 from config import userid, passwd, ttoken
 
 
@@ -25,6 +27,8 @@ def send_doc(file_name, download_path):
         except:
             pass
         return True
+    else:
+        status.raise_for_status()
     return False
 
 
@@ -129,15 +133,15 @@ def down():
 
 flag = False
 while 1:
-    time.sleep(350)
+    time.sleep(70)
     day = (datetime.now(tz=gettz('Asia/Kolkata'))).today().weekday()
-    #day = 0
+    # day = 0
     if day != 0 and day != 3:
         flag = False
         continue
     else:
         h = (datetime.now(tz=gettz('Asia/Kolkata'))).hour
-        #h = 13
+        # h = 13
         if h < 13 or h > 14:
             continue
     try:
@@ -145,5 +149,5 @@ while 1:
             flag = down()
 
     except Exception as e:
-        print(e, end="\n\n")
+        print("C- ", e, end="\n\n")
         continue
