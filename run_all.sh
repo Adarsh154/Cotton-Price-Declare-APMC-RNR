@@ -1,1 +1,1 @@
-nohup python3 -u cotton.py &
+nohup python3 cotton.py &

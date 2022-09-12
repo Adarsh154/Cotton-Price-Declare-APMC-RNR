@@ -14,6 +14,20 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from config import userid, passwd, ttoken
 
+import logging
+
+log_file = str(datetime.utcnow().strftime('%d_%m_%Y')) + '.log'
+logging.basicConfig(filename=log_file,
+                    format='%(asctime)s,%(msecs)d %(levelname)-8s [%(filename)s:%(lineno)d] %(message)s',
+                    datefmt='%Y-%m-%d:%H:%M:%S',
+                    level=logging.ERROR, filemode='a')
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+
+token = os.getenv("ttoken")
+for _ in logging.root.manager.loggerDict:
+    logging.getLogger(_).disabled = True
+
 
 def send_doc(file_name, download_path):
     token = ttoken
@@ -28,6 +42,7 @@ def send_doc(file_name, download_path):
             pass
         return True
     else:
+        logger.error("requests error:" + str(e))
         status.raise_for_status()
     return False
 
@@ -142,12 +157,12 @@ while 1:
     else:
         h = (datetime.now(tz=gettz('Asia/Kolkata'))).hour
         # h = 13
-        if h < 13 or h > 14:
+        if h < 13 or h > 15:
             continue
     try:
         if not flag:
             flag = down()
 
     except Exception as e:
-        print("C- ", e, end="\n\n")
+        logger.error("Final error:" + str(e))
         continue
